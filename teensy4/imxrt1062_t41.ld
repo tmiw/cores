@@ -52,6 +52,19 @@ SECTIONS
 		. = ALIGN(4);
 	} > FLASH
 	
+	.text.itcm : {
+		. = . + 32; /* MPU to trap NULL pointer deref */
+		*(.fastrun)
+		*(.text*)
+		. = ALIGN(16);
+	} > ITCM  AT> FLASH
+
+	.ARM.exidx : {
+		__exidx_start = .;
+		*(.ARM.exidx* .ARM.extab.text* .gnu.linkonce.armexidx.*)
+		__exidx_end = .;
+	} > ITCM  AT> FLASH
+
 	.data : {
 		*(.endpoint_queue)   
 		*(SORT_BY_ALIGNMENT(SORT_BY_NAME(.rodata*)))
